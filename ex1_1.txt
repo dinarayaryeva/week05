@@ -1,0 +1,9 @@
+Thread 0 was created.
+Thread 0 exits.
+Thread 1 was created.
+Thread 1 exits.
+Thread 2 was created.
+Thread 2 exits.
+Thread 3 gives a message.
+Thread 3 gives a message.
+Thread 3 gives a message.
