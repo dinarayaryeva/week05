@@ -9,8 +9,7 @@ void consumer(); //function for consumer threads
 int count = 0; // number next element
 char buffer[BUFFER_SIZE];
 
-int p_mutex = 0; //mutex for producer threads
-int c_mutex = 0; //mutex for consumer threads
+int mutex = 0; //mutex for threads
 int size = 0; //number of filled cells in the buffer
 int empty = BUFFER_SIZE; //number of empty cells in buffer
 
@@ -43,21 +42,22 @@ void producer()
 {    
   while(1){
 
-    if (p_mutex == 0){ //check if available
-      p_mutex = 1;
+    if (mutex == 0){ //check if available
+      mutex = 1;
 
       if(count == BUFFER_SIZE){ //if buffer is full -> wait
         
-        p_mutex = 0;                        
+        mutex = 0;                        
         producer_wait();
         continue; //new loop iteration, otherwise race condition
       } 
 
-      buffer[count++] = '!'; // random buffer filling
-      printf("Produce : %d \n", count);
+      buffer[count+1] = '!'; // random buffer filling
+      printf("Produce : %d \n", count+1);
       size++;
       empty--;
-      p_mutex = 0;      
+      count++;
+      mutex = 0;      
     }    
   }
 }
@@ -66,20 +66,21 @@ void consumer()
 {
   while(1){ 
 
-    if (c_mutex == 0){ //check if available
-      c_mutex = 1;
+    if (mutex == 0){ //check if available
+        mutex = 1;
 
       if(count == 0){ //if buffer is empty -> wait
         
-        c_mutex = 0;         
+        mutex = 0;         
         consumer_wait();
         continue; //new loop iteration, otherwise race condition
       }  
           
-      printf("Consume : %d \n", count--);        
+      printf("Consume : %d \n", count);        
       size--;
       empty++;
-      c_mutex = 0;                
+      count--;
+      mutex = 0;                
     }    
   }
 }
